@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <locale.h>
 
 struct DatosVet
 {
@@ -22,6 +23,7 @@ void Cargarusuario(Usuario &DatU);
 
 main()
 {
+	setlocale(LC_ALL,"spanish");
 	FILE *Vet;
 	
 }
@@ -171,7 +173,7 @@ void Cargarusuario(Usuario &DatU)
 		
 		b=0;
 		
-		printf("Registrar contrasenia:\n");
+		printf("Registrar contraseña:\n");
 		printf("1- Debe contener como minimo: una letra mayuscula,una minuscula y un numero\n");
 		printf("2- Solo puede contener caracteres alfanumericos\n");
 		printf("3- Debe tener entre 6-32 caracteres\n");
@@ -181,7 +183,7 @@ void Cargarusuario(Usuario &DatU)
 		while(b==0)
 		{
 			Num=0;
-			printf("Ingrese la contrasenia: ");
+			printf("Ingrese la contraseña: ");
 			_flushall();
 			gets(DatU.Contra);
 			Long = strlen(DatU.Contra);
@@ -273,18 +275,18 @@ void Cargarusuario(Usuario &DatU)
 					}
 					else
 					{
-						printf("Error: Debe ingresar al menos una mayuscula, una minuscula y un numero.");
+						printf("Error: Debe ingresar al menos una mayúscula, una minúscula y un número.");
 					}
 					
 				}
 				else
 				{
-					printf("Error: Debe ingresar caracteres alfanumericos.");
+					printf("Error: Debe ingresar caractéres alfanumericos.");
 				}
 			}
 			else
 			{
-				printf("Error: Debe ingresar una contrasenia de 6-32 caracteres.");
+				printf("Error: Debe ingresar una contrasenia de 6-32 caractéres.");
 			}
 			
 			
