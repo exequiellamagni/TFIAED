@@ -21,12 +21,46 @@ void RegistrarVet(FILE *Vet);
 int UsuarioRepetido(char NomU[10],FILE *&Vet);
 void ComprobarUsuario(char NomU[10],int &b,FILE *&Vet);
 void ComprobarContra(char ConU[32],int &b);
+void RegistrarUs(FILE *Vet);
 
 main()
 {
+	int menu;
 	setlocale(LC_ALL,"spanish");
 	FILE *Vet;
-	RegistrarVet(Vet);
+	
+	
+	
+	while(menu!=5)
+	{
+		printf("----------------------------------");
+		printf("\nSe encuentra en el menú, ingrese:");
+		printf("\n\n1-Registrar un nuevo veterinario");
+		printf("\n2-Registrar un nuevo asistente");
+		printf("\n5-Cerrar Menú");
+		printf("\n----------------------------------");
+		printf("\n\nIngrese la opcion: ");
+		scanf("%d",&menu);
+		system("CLS");
+		
+		switch(menu)
+		{
+			case 1: RegistrarVet(Vet);
+			break;
+			case 2: RegistrarUs(Vet);
+			break;
+			case 5: 
+			break;
+			default: printf("Error: opcion invalida");
+		}
+		if(menu!=5)
+		{
+			printf("\n\n\n");
+			system("pause");
+		}
+		system("CLS");
+	}
+	
 	
 	
 }
@@ -61,7 +95,7 @@ void RegistrarVet(FILE *Vet)
 		fclose(Vet);
 		
 	    //Registro de usuario  del veterinario.
-	    
+	    system("CLS");
 	    Vet = fopen("Usuario.dat","a+b");
 	    if(Vet==NULL)
 	    {
@@ -77,7 +111,7 @@ void RegistrarVet(FILE *Vet)
 		    b=0;
 		    while(b==0)
 		    {
-		        printf("Ingrese el nombre de usuario: ");
+		        printf("\nIngrese el nombre de usuario: ");
 		        _flushall();
 	    	    gets(DatU.Usuar);
 			    ComprobarUsuario(DatU.Usuar,b,Vet);
@@ -85,7 +119,7 @@ void RegistrarVet(FILE *Vet)
 		  
 	       //registro de contraseñia del veterinario
 	  
-	  	    printf("Registrar contraseña:\n");
+	  	    printf("\nRegistrar contraseña:\n");
 		    printf("1- Debe contener como minimo: una letra mayuscula,una minuscula y un numero\n");
 		    printf("2- Solo puede contener caracteres alfanumericos\n");
 		    printf("3- Debe tener entre 6-32 caracteres\n");
@@ -94,7 +128,7 @@ void RegistrarVet(FILE *Vet)
 		    b=0;
 	  	    while(b==0)
 	  	    {
-	  		    printf("Ingrese la contraseña: ");
+	  		    printf("\nIngrese la contraseña: ");
 			    _flushall();
 			    gets(DatU.Contra);
 			    ComprobarContra(DatU.Contra,b);
@@ -305,13 +339,60 @@ void ComprobarContra(char ConU[32],int &b)
 }
 
 
-
-
-
-
-
-
-
+void RegistrarUs(FILE *Vet)
+{
+        Usuario DatU;
+        int b=0;
+	
+	    printf("Ingrese apellido y nombre del asistente: ");
+	    _flushall();
+    	gets(DatU.Nombre);
+	
+	    //Registro de usuario  del asistente.
+	    system("CLS");
+	    Vet = fopen("Usuario.dat","a+b");
+	    if(Vet==NULL)
+	    {
+	    	printf("Error al abrir el archivo\n");
+	    }
+	    else
+	    {
+		    printf("Registrar nombre de usuario:\n");
+		    printf("1-Debe ser unico\n2-Debe comenzar con una letra minuscula\n3-Debe tener como minimo dos letras mayusculas\n");
+		    printf("4-Tener como maximo 3 digitos\n5-Debe tener de 6-10 caracteres\n");
+		    b=0;
+		    while(b==0)
+		    {
+		        printf("\nIngrese el nombre de usuario: ");
+		        _flushall();
+	    	    gets(DatU.Usuar);
+			    ComprobarUsuario(DatU.Usuar,b,Vet);
+		    }
+		  
+	       //registro de contraseñia del asistente.
+	  
+	  	    printf("\nRegistrar contraseña:\n");
+		    printf("1- Debe contener como minimo: una letra mayuscula,una minuscula y un numero\n");
+		    printf("2- Solo puede contener caracteres alfanumericos\n");
+		    printf("3- Debe tener entre 6-32 caracteres\n");
+		    printf("4- No debe tener mas de 3 caracteres numericos consecutivos\n");
+		    printf("5- No debe tener 2 letras consecutivas ascendentes\n");
+		    b=0;
+	  	    while(b==0)
+	  	    {
+	  		    printf("\nIngrese la contraseña: ");
+			    _flushall();
+			    gets(DatU.Contra);
+			    ComprobarContra(DatU.Contra,b);
+	  	    }
+	  	    
+	  	    fwrite(&DatU,sizeof(Usuario),1,Vet);
+	  	    fclose(Vet);
+		
+	    }
+	
+	
+}
 
 
 
