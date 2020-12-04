@@ -25,7 +25,7 @@ void RegistrarUs(FILE *Vet);
 
 main()
 {
-	int menu;
+	int menu=0;
 	setlocale(LC_ALL,"spanish");
 	FILE *Vet;
 	
@@ -33,12 +33,12 @@ main()
 	
 	while(menu!=5)
 	{
-		printf("----------------------------------");
-		printf("\nSe encuentra en el menú, ingrese:");
+		printf("-----------------------------------------------------");
+		printf("\nSe encuentra en el menú de administración, ingrese:");
 		printf("\n\n1-Registrar un nuevo veterinario");
 		printf("\n2-Registrar un nuevo asistente");
 		printf("\n5-Cerrar Menú");
-		printf("\n----------------------------------");
+		printf("\n---------------------------------------------------");
 		printf("\n\nIngrese la opcion: ");
 		scanf("%d",&menu);
 		system("CLS");
