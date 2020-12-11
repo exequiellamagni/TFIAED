@@ -228,16 +228,16 @@ void RegistarTur(FILE *Us)
 
 							fread(&AuxM,sizeof(Mascotas),1,Masc);
 						}
-						
+						fclose(Masc);
 				}
-
+                fseek(Us,0,2);
 			}
 			
 			fread(&Matri,sizeof(DatosVet),1,Us);
 		}
 		
 		fclose(Us);
-		fclose(Masc);
+		
 	}
 	
 	if(band==1)
@@ -257,7 +257,7 @@ void RegistarTur(FILE *Us)
 	{
 		printf("\nError: Mascota no registrada\n");
 	}
-	else
+	else if (band==0)
 	{
 		printf("\nError: Matricula incorrecta\n");
 	}
