@@ -3,19 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <locale.h>
+#include"LibreriasTFI.h"
 
-struct DatosVet
-{
-	char ApeyNom[60];
-	int Mat,DNI;
-	char Tel[25];
-};
-struct Usuario
-{
-	char Usuar[10];
-	char Contra[32];
-	char Nombre[60];
-};
 
 void RegistrarVet(FILE *Vet);
 int UsuarioRepetido(char NomU[10],FILE *&Vet);

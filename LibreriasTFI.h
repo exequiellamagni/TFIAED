@@ -2,9 +2,6 @@
 #include<stdlib.h>
 #include<string.h>
 
-
-
-
 struct Usuario
 {
 	char Usuar[10];
@@ -12,11 +9,34 @@ struct Usuario
 	char Nombre[60];
 };
 
+struct Fecha
+{
+	int dia,mes,anio;
+};
+
+
 struct DatosVet
 {
 	char ApeyNom[60];
 	int Mat,DNI;
 	char Tel[25];
+};
+
+
+struct Mascotas
+{
+	char Nombre[60],Dom[60],Loc[60],Tel[25];
+	int DNID;
+    Fecha fecNac;
+    float Peso;
+};
+
+struct Turnos
+{
+	int MatV,DNIT;
+	Fecha FecT;
+	char Det[380];
+	bool borrado;
 };
 
 

@@ -4,25 +4,8 @@
 #include"LibreriasTFI.h"
 #include <locale.h>
 
-struct Fecha
-{
-	int dia,mes,anio;
-};
 
-struct Mascotas
-{
-	char Nombre[60],Dom[60],Loc[60],Tel[25];
-	int DNID;
-    Fecha fecNac;
-    float Peso;
-};
 
-struct Turnos
-{
-	int MatV,DNI;
-	Fecha fecTurn;
-	char Det[380];
-};
 void RegistrarMas(FILE *Us);
 void RegistarTur(FILE *Us);
 
@@ -64,7 +47,15 @@ main()
 			          	printf("Error: Debe iniciar sesión\n");
 			          }
 			 break;
-			 		        
+			 		
+			 case 3:  if(Is==1)
+			          {
+			          	RegistarTur(Us);
+			          }
+			          else
+			          {
+			          	printf("Error: Debe iniciar sesión\n");
+			          }       
 			        
 		}
 		if(menu!=5)
@@ -181,5 +172,91 @@ void RegistrarMas(FILE *Us)
 
 void RegistarTur(FILE *Us)
 {
+	Turnos DatP;
+	DatosVet Matri;
+	Mascotas AuxM;
+	FILE *Masc;
+	int band=0;
+	
+	printf("Ingrese el numero de matricula de el veterinario: ");
+	scanf("%d",&DatP.MatV);
+	
+	Us = fopen("Veterinario.dat","rb");
+	if(Us==NULL)
+	{
+		printf("\nError: No se registro ningun veterinario\n");
+	}
+	else
+	{
+       
+		fread(&Matri,sizeof(DatosVet),1,Us);
+		while(!feof(Us))
+		{
+			
+			if(Matri.Mat == DatP.MatV)
+			{
+			    	
+				printf("Ingrese el DNI del dueño: ");
+				scanf("%d",&DatP.DNIT);	
+				
+				Masc = fopen("Mascotas.dat","rb");
+				if(Masc==NULL)
+				{
+					printf("\nError: no se registro ninguna mascota\n");
+				}
+				else
+				{
+						fread(&AuxM,sizeof(Mascotas),1,Masc);
+						while(!feof(Masc))
+						{
+							
+							if(AuxM.DNID == DatP.DNIT)
+							{
+								printf("Ingrese la fecha de turno(DD/MM/AAAA): ");
+								scanf("%d/%d/%d",&DatP.FecT.dia,&DatP.FecT.mes,&DatP.FecT.anio);
+								band=1;
+								fseek(Masc,0,2);
+								
+							}
+							else
+							{
+							  band=2;
+							}
+
+							fread(&AuxM,sizeof(Mascotas),1,Masc);
+						}
+						
+				}
+
+			}
+			
+			fread(&Matri,sizeof(DatosVet),1,Us);
+		}
+		
+		fclose(Us);
+		fclose(Masc);
+	}
+	
+	if(band==1)
+	{
+		Us = fopen("Turnos.dat","ab");
+		if(Us==NULL)
+		{
+			printf("\nError: No se pudo abrir el archivo\n");
+		}
+		else
+		{
+			fwrite(&DatP,sizeof(Turnos),1,Us);
+			printf("Turno registrado");
+		}
+	}
+	else if(band==2)
+	{
+		printf("\nError: Mascota no registrada\n");
+	}
+	else
+	{
+		printf("\nError: Matricula incorrecta\n");
+	}
 	
 }
