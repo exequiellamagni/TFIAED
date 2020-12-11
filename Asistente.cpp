@@ -55,7 +55,10 @@ main()
 			          else
 			          {
 			          	printf("Error: Debe iniciar sesión\n");
-			          }       
+			          }    
+		    break;
+			case 4: menu=5;
+			break;   
 			        
 		}
 		if(menu!=5)
