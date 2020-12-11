@@ -79,7 +79,6 @@ int IniciarSesion(FILE *&Vet,int b)
 		
 		if(k==1)
 		{
-		
 			aux=fopen("Veterinario.dat","rb");
 			if(aux==NULL)
 			{
@@ -96,9 +95,10 @@ int IniciarSesion(FILE *&Vet,int b)
 			else
 			{
 				fread(&DatV,sizeof(DatosVet),1,aux);
-		
+		        
 	        	while(!feof(aux))
 	    	    {
+	    	    	strupr(DatV.ApeyNom);
 	        		if(strcmp(DatI.Nombre,DatV.ApeyNom)==0)
 	        		{
 	        			k=0;
