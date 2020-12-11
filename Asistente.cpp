@@ -24,6 +24,7 @@ struct Turnos
 	char Det[380];
 };
 void RegistrarMas(FILE *Us);
+void RegistarTur(FILE *Us);
 
 main()
 {
@@ -37,7 +38,7 @@ main()
 		printf("\nSe encuentra en el menú de asistentes, ingrese:");
 		printf("\n\n1-Iniciar sesión");
 		printf("\n2-Registrar mascota");
-		printf("\n3-Regisrar turno");
+		printf("\n3-Registrar turno");
 		printf("\n4-Listado de atenciones por veterinario y fecha");
 		printf("\n5-Cerrar Menú");
 		printf("\n-----------------------------------------------");
@@ -178,4 +179,7 @@ void RegistrarMas(FILE *Us)
 	fclose(Us);
 }
 
-
+void RegistarTur(FILE *Us)
+{
+	
+}
