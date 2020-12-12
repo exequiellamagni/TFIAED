@@ -175,10 +175,10 @@ void RegistrarMas(FILE *Us)
 
 void RegistarTur(FILE *Us)
 {
-	Turnos DatP;
+	Turnos DatP,AuxP;
 	DatosVet Matri;
 	Mascotas AuxM;
-	FILE *Masc;
+	FILE *Masc, *Tur;
 	int band=0;
 	
 	printf("Ingrese el numero de matricula de el veterinario: ");
@@ -209,28 +209,73 @@ void RegistarTur(FILE *Us)
 				}
 				else
 				{
+					    printf("Ingrese el nombre de la mascota: ");
+					    _flushall();
+					    gets(DatP.NomMas);
+					    strupr(DatP.NomMas);
+					    
 						fread(&AuxM,sizeof(Mascotas),1,Masc);
 						while(!feof(Masc))
 						{
 							
-							if(AuxM.DNID == DatP.DNIT)
+							if(AuxM.DNID == DatP.DNIT && strcmp(AuxM.Nombre,DatP.NomMas)==0)
 							{
-								printf("Ingrese la fecha de turno(DD/MM/AAAA): ");
-								scanf("%d/%d/%d",&DatP.FecT.dia,&DatP.FecT.mes,&DatP.FecT.anio);
-								band=1;
-								fseek(Masc,0,2);
+								Tur = fopen("Turnos.dat","a+b");
+								if(Tur==NULL)
+								{
+									band=1;
+								}
+								else
+								{
+									rewind(Tur);
+									fread(&AuxP,sizeof(Turnos),1,Tur);
+									while(!feof(Tur))
+									{
+										if(strcmp(AuxP.NomMas,DatP.NomMas)==0 && AuxP.DNIT == DatP.DNIT)
+										{
+											printf("Ingrese la fecha de turno(DD/MM/AAAA): ");
+											scanf("%d/%d/%d",&DatP.FecT.dia,&DatP.FecT.mes,&DatP.FecT.anio);
+											
+											strcpy(DatP.evoMasc,AuxP.evoMasc);
+											DatP.borrado=false;
+											fseek(Tur,-sizeof(Turnos),1);
+											fwrite(&DatP,sizeof(Turnos),1,Us);
+											
+											printf("Turno registrado");
+							                band=3;
+											fseek(Tur,0,2);
+											fseek(Masc,0,2);
+											fseek(Us,0,2);
+										
+										}
+										else
+										{
+											band=1;
+										}
+										
+										fread(&AuxP,sizeof(Turnos),1,Tur);
+									}
+									fclose(Tur);
+									if(band==0)
+									{
+										band=1;
+									}
+									
+									
+								}
 								
 							}
 							else
 							{
-							  band=2;
+								band=2;
 							}
-
+							
+						
 							fread(&AuxM,sizeof(Mascotas),1,Masc);
 						}
 						fclose(Masc);
 				}
-                fseek(Us,0,2);
+                
 			}
 			
 			fread(&Matri,sizeof(DatosVet),1,Us);
@@ -242,16 +287,14 @@ void RegistarTur(FILE *Us)
 	
 	if(band==1)
 	{
-		Us = fopen("Turnos.dat","ab");
-		if(Us==NULL)
-		{
-			printf("\nError: No se pudo abrir el archivo\n");
-		}
-		else
-		{
-			fwrite(&DatP,sizeof(Turnos),1,Us);
-			printf("Turno registrado");
-		}
+	    Tur = fopen("Turnos.dat","ab");
+		printf("Ingrese la fecha de turno(DD/MM/AAAA): ");
+		scanf("%d/%d/%d",&DatP.FecT.dia,&DatP.FecT.mes,&DatP.FecT.anio);
+		fwrite(&DatP,sizeof(Turnos),1,Tur);
+		printf("Turno registrado");
+		fclose(Tur);
+		
+
 	}
 	else if(band==2)
 	{
@@ -261,5 +304,23 @@ void RegistarTur(FILE *Us)
 	{
 		printf("\nError: Matricula incorrecta\n");
 	}
+	
+	
+	
+	
+	Tur=fopen("Turnos.dat","rb");
+	fread(&AuxP,sizeof(Turnos),1,Tur);
+	while(!feof(Tur))
+	{
+		
+		printf("%d/%d/%d",AuxP.FecT.dia,AuxP.FecT.mes,AuxP.FecT.anio);
+		if(AuxP.borrado==false)
+		{
+			printf("--CUalquier cosa---");
+		}
+		fread(&AuxP,sizeof(Turnos),1,Tur);
+		
+	}
+	fclose(Tur);
 	
 }
