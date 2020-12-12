@@ -239,14 +239,13 @@ void RegistarTur(FILE *Us)
 											strcpy(DatP.evoMasc,AuxP.evoMasc);
 											DatP.borrado=false;
 											fseek(Tur,-sizeof(Turnos),1);
-											fwrite(&DatP,sizeof(Turnos),1,Us);
+											fwrite(&DatP,sizeof(Turnos),1,Tur);
 											
 											printf("Turno registrado");
 							                band=3;
 											fseek(Tur,0,2);
 											fseek(Masc,0,2);
 											fseek(Us,0,2);
-										
 										}
 										else
 										{
@@ -304,23 +303,5 @@ void RegistarTur(FILE *Us)
 	{
 		printf("\nError: Matricula incorrecta\n");
 	}
-	
-	
-	
-	
-	Tur=fopen("Turnos.dat","rb");
-	fread(&AuxP,sizeof(Turnos),1,Tur);
-	while(!feof(Tur))
-	{
-		
-		printf("%d/%d/%d",AuxP.FecT.dia,AuxP.FecT.mes,AuxP.FecT.anio);
-		if(AuxP.borrado==false)
-		{
-			printf("--CUalquier cosa---");
-		}
-		fread(&AuxP,sizeof(Turnos),1,Tur);
-		
-	}
-	fclose(Tur);
 	
 }
