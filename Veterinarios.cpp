@@ -198,8 +198,21 @@ void listaEspera(FILE *Us)
 									printf("--------------------------------------------------\n");
 									printf("Nombre de la mascota: ");
 									puts(turnAux.NomMas);
-									printf("Fecha de nacimiento: %d/%d/%d\n",mascAux.fecNac.dia,mascAux.fecNac.mes,mascAux.fecNac.anio);
+									if((mascAux.fecNac.anio - fecAux.anio)>0)
+									{
+										printf("Edad: %d años\n",mascAux.fecNac.anio - fecAux.anio);
+									}
+									else if((mascAux.fecNac.mes - fecAux.mes) > 0)
+									{
+										printf("Edad: %d meses\n",mascAux.fecNac.mes - fecAux.mes);
+									}
+									else
+									{
+										printf("Edad: %d dias\n",mascAux.fecNac.dia - fecAux.dia);
+									}									
 									printf("Peso: %2.f\n",mascAux.Peso);
+									printf("Localidad: %s\n",mascAux.Loc);
+									printf("DNI del dueño: %d\n",mascAux.DNID);
 									printf("\n\nEVOLUCION REGISTRADA DE LA MASCOTA:\n");
 									puts(turnAux.evoMasc);
 									printf("--------------------------------------------------\n");

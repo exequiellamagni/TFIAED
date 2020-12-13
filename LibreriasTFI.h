@@ -22,7 +22,6 @@ struct DatosVet
 	char Tel[25];
 };
 
-
 struct Mascotas
 {
 	char Nombre[60],Dom[60],Loc[60],Tel[25];
