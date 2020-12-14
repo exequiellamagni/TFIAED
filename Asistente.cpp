@@ -56,14 +56,14 @@ main()
 			          	printf("Error: Debe iniciar sesión\n");
 			          }    
 		    break;
-			case 4: // if(Is==1)
-			         //{
-			         	ListAt(Us);
-			         //}
-			         //else
-			         //{
-			         //	printf("\nError: Debe iniciar sesion\n");
-			         //}
+			case 4: if(Is==1)
+			        {
+			        	ListAt(Us);
+			        }
+			         else
+			         {
+			         	printf("\nError: Debe iniciar sesion\n");
+			         }
 			break;  
 			case 5:
 			break;
