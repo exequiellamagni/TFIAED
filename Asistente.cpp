@@ -13,7 +13,7 @@ main()
 	setlocale(LC_ALL,"spanish");
 	FILE *Us;
 	int menu=0,b=0,Is,Vi=0;
-	
+	Mascotas Aux;
 	while(menu!=5)
 	{
 		printf("-------------------------------------------------");
@@ -56,15 +56,18 @@ main()
 			          	printf("Error: Debe iniciar sesión\n");
 			          }    
 		    break;
-			case 4:  if(Is==1)
-			         {
+			case 4: // if(Is==1)
+			         //{
 			         	ListAt(Us);
-			         }
-			         else
-			         {
-			         	printf("\nError: Debe iniciar sesion\n");
-			         }
-			break;   
+			         //}
+			         //else
+			         //{
+			         //	printf("\nError: Debe iniciar sesion\n");
+			         //}
+			break;  
+			case 5:
+			break;
+			default: printf("\nEl valor ingresado no es valida."); 
 			        
 		}
 		if(menu!=5)
@@ -171,6 +174,8 @@ void RegistrarMas(FILE *Us)
 		}	
 	}
 	fclose(Us);
+	
+	
 }
 
 
@@ -200,9 +205,8 @@ void RegistarTur(FILE *Us)
 			
 			if(Matri.Mat == DatP.MatV)
 			{
-				printf("Ingrese el DNI del dueño: ");
-				scanf("%d",&DatP.DNIT);	
 				
+			
 				Masc = fopen("Mascotas.dat","rb");
 				if(Masc==NULL)
 				{
@@ -210,69 +214,72 @@ void RegistarTur(FILE *Us)
 				}
 				else
 				{
-					    printf("Ingrese el nombre de la mascota: ");
-					    _flushall();
-					    gets(DatP.NomMas);
-					    strupr(DatP.NomMas);
-					    
-						fread(&AuxM,sizeof(Mascotas),1,Masc);
+					   
+				        printf("Ingrese el DNI del dueño: ");
+						scanf("%d",&DatP.DNIT);	
+						
+						printf("Ingrese el nombre de la mascota: ");
+					  	_flushall();
+						gets(DatP.NomMas);
+					 	strupr(DatP.NomMas);
+				         
+					    fread(&AuxM,sizeof(Mascotas),1,Masc);
 						while(!feof(Masc))
 						{
-							if(AuxM.DNID == DatP.DNIT && strcmp(AuxM.Nombre,DatP.NomMas)==0)
-							{
-								Tur = fopen("Turnos.dat","a+b");
-								if(Tur==NULL)
+					            if(strcmp(AuxM.Nombre,DatP.NomMas )==0 && AuxM.DNID == DatP.DNIT)
 								{
-									band=1;
-								}
-								else
-								{
-									rewind(Tur);
-									fread(&AuxP,sizeof(Turnos),1,Tur);
-									while(!feof(Tur))
-									{
-										if(strcmp(AuxP.NomMas,DatP.NomMas)==0 && AuxP.DNIT == DatP.DNIT)
-										{
-											printf("Ingrese la fecha de turno(DD/MM/AAAA): ");
-											scanf("%d/%d/%d",&DatP.FecT.dia,&DatP.FecT.mes,&DatP.FecT.anio);
-											
-											strcpy(DatP.evoMasc,AuxP.evoMasc);
-											DatP.borrado=false;
-											fseek(Tur,-sizeof(Turnos),1);
-											fwrite(&DatP,sizeof(Turnos),1,Tur);
-											
-											printf("Turno registrado");
-							                band=3;
-											fseek(Tur,0,2);
-											fseek(Masc,0,2);
-											fseek(Us,0,2);
-										}
-										else
-										{
-											band=1;
-										}
-										
-										fread(&AuxP,sizeof(Turnos),1,Tur);
-									}
-									fclose(Tur);
-									if(band==0)
+									
+									Tur = fopen("Turnos.dat","a+b");
+									if(Tur==NULL)
 									{
 										band=1;
 									}
-					
+									else
+									{
+										rewind(Tur);
+										fread(&AuxP,sizeof(Turnos),1,Tur);
+										while(!feof(Tur))
+										{
+											if(strcmp(AuxP.NomMas,DatP.NomMas) == 0 && AuxP.DNIT == DatP.DNIT)
+											{
+												printf("Ingrese la fecha de turno(DD/MM/AAAA): ");
+												scanf("%d/%d/%d",&DatP.FecT.dia,&DatP.FecT.mes,&DatP.FecT.anio);
+											
+												strcpy(DatP.evoMasc,AuxP.evoMasc);
+												DatP.borrado=false;
+												fseek(Tur,-sizeof(Turnos),1);
+												fwrite(&DatP,sizeof(Turnos),1,Tur);
+												
+												printf("Turno registrado");
+							                	band=3;
+												fseek(Tur,0,2);
+											}
+											else
+											{
+												band=1;
+											}
+										
+											fread(&AuxP,sizeof(Turnos),1,Tur);
+										}
+										fclose(Tur);
+										if(band==0 || band==2)
+										{
+											band=1;
+										}
+									}
+									fseek(Masc,0,2);
+							    }
+								else
+								{
+									band=2;
 								}
-								
-							}
-							else
-							{
-								band=2;
-							}
+							
 							fread(&AuxM,sizeof(Mascotas),1,Masc);
 						}
 						fclose(Masc);
 						
 				}
-                
+               fseek(Us,0,2); 
 			}
 			
 			fread(&Matri,sizeof(DatosVet),1,Us);
@@ -298,6 +305,8 @@ void RegistarTur(FILE *Us)
 	{
 		printf("\nError: Matricula incorrecta\n");
 	}
+	
+
 }
 
 
@@ -306,103 +315,87 @@ void ListAt(FILE*Us)
 	FILE *Aux;
     Fecha fecAux;
     int matricula;
-    DatosVet AuxV;
     Mascotas AuxM;
     int band=0;
     Turnos AuxT;
     
 	printf("Ingrese la matricula del veterinario: ");
 	scanf("%d",&matricula);
+
+	printf("Ingrese la fecha a buscar(DD/MM/AAAA): ");
+	scanf("%d/%d/%d",&fecAux.dia,&fecAux.mes,&fecAux.anio);
 	
-	Us = fopen("Veterinario.dat","rb");
-	if(Us==NULL)
+	if(fecAux.dia > 0 && fecAux.dia < 32)
 	{
-		printf("\nError: No se registro ningun veterinario\n");
-	} 
+		
+		if(fecAux.mes > 0 && fecAux.mes < 13)
+		{
+			if(fecAux.anio > 2019 && fecAux.anio < 2300)
+			{
+				band=1;
+			}
+			else
+			{
+				printf("\nError: Año erroneo\n");
+				band=2;
+			}
+      	}
+        else
+        {
+        	band=2;
+        	printf("\nError: Mes erroneo\n");
+        }
+	}
 	else
 	{
-		fread(&AuxT,sizeof(Turnos),1,Us);
-		
-		while(!feof(Us))
-		{
-			if(AuxT.MatV == matricula)
-			{
-				printf("Ingrese la fecha a buscar(DD/MM/AAAA): ");
-				scanf("%d/%d/%d",&fecAux.dia,&fecAux.mes,&fecAux.anio);
-	
-				if(fecAux.dia > 0 && fecAux.dia < 32)
-				{
-					if(fecAux.mes > 0 && fecAux.mes < 13)
-					{
-						if(fecAux.anio > 2019 && fecAux.anio < 2300)
-						{
-							band==1;
-						}
-						else
-						{
-							printf("\nError: Año erroneo\n");
-						}
-        			}
-        			else
-        			{
-        				printf("\nError: Mes erroneo\n");
-        			}
-				}
-				else
-				{
-					printf("\nError: Dia erroneo\n");
-				}
-			}
-			fread(&AuxT,sizeof(Turnos),1,Us);
-		}
-		fclose(Us);
+		band=2;
+		printf("\nError: Dia erroneo\n");
 	}
+
 	
 	if(band==1)
 	{
+		
 		Us=fopen("Turnos.dat","rb");
 		if(Us==NULL)
 		{
-			printf("\nError: No se registraron turnos\n");
+			printf("\nError: No se hicieron atenciones\n");
 		}
 		else
 		{
-			fread(&AuxV,sizeof(DatosVet),1,Us);
+			fread(&AuxT,sizeof(Turnos),1,Us);
 		
 			while(!feof(Us))
 			{
-				if(AuxV.Mat == matricula)
+	
+				if(AuxT.MatV == matricula)
 				{
 					if(fecAux.dia == AuxT.FecT.dia)
 					{
 						if(fecAux.mes == AuxT.FecT.mes)
 						{
-							if(fecAux.dia == AuxT.FecT.dia)
+							if(fecAux.anio == AuxT.FecT.anio && AuxT.borrado==true)
 							{
-								Aux = fopen("Mascotas.dat","rb");
-								fread(&AuxM,sizeof(Mascotas),1,Aux);
-								while(!feof(Aux))
-								{
-									
-									printf("Datos de la mascota: \n");
-									printf("-----------------------------------");
-									printf("\tNombre: %d\n",AuxM.Nombre);
-									printf("\tDomicilio: %s\n",AuxM.Dom);
-									printf("\tLocalidad: %s\n",AuxM.Loc);
-									printf("\tTelefono: %s\n",AuxM.Tel);
-									printf("\tDNI del dueño: %d\n",AuxM.DNID);
-									printf("\tFecha de nacimiento: %d/%d/%d\n",AuxM.fecNac.dia,AuxM.fecNac.mes,AuxM.fecNac.anio);
-									printf("\tPeso: %d\n",AuxM.Peso);
-									printf("-----------------------------------");
-									fread(&AuxM,sizeof(Mascotas),1,Aux);
-									
-								}	
+								
+								printf("Datos de la mascota: \n");
+								printf("-----------------------------------\n");
+								printf("\tNombre: %s\n",AuxT.NomMas);
+								printf("\tDNI del dueño: %d\n",AuxT.DNIT);
+								printf("\tHistoria clinica: %s\n",AuxT.evoMasc);
+								printf("-----------------------------------\n");
+								    
 							}
+								
 						}
 					}
 				}
-				fread(&AuxV,sizeof(DatosVet),1,Us);
+				fread(&AuxT,sizeof(Turnos),1,Us);
 			}
+			fclose(Us);
 		}
+	}
+	else if(band==2)
+	{
+		printf("El veterinario no realizo ninguna atencion en esa fecha.");
 	}
 }

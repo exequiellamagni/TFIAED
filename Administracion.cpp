@@ -5,12 +5,15 @@
 #include <locale.h>
 #include"LibreriasTFI.h"
 
+typedef char NomV[60];
 
 void RegistrarVet(FILE *Vet);
 int UsuarioRepetido(char NomU[10],FILE *&Vet);
 void ComprobarUsuario(char NomU[10],int &b,FILE *&Vet);
 void ComprobarContra(char ConU[32],int &b);
 void RegistrarUs(FILE *Vet);
+void MostrarAtenciones(FILE *Vet);
+void Ranking(FILE *Vet);
 
 main()
 {
@@ -26,6 +29,8 @@ main()
 		printf("\nSe encuentra en el menú de administración, ingrese:");
 		printf("\n\n1-Registrar un nuevo veterinario");
 		printf("\n2-Registrar un nuevo asistente");
+		printf("\n3-Atenciones por veterinarios");
+		printf("\n4-Listado de atenciones por veterinario y fecha");
 		printf("\n5-Cerrar Menú");
 		printf("\n---------------------------------------------------");
 		printf("\n\nIngrese la opcion: ");
@@ -37,6 +42,10 @@ main()
 			case 1: RegistrarVet(Vet);
 			break;
 			case 2: RegistrarUs(Vet);
+			break;
+			case 3: MostrarAtenciones(Vet);
+			break;
+			case 4: Ranking(Vet);
 			break;
 			case 5: 
 			break;
@@ -383,8 +392,134 @@ void RegistrarUs(FILE *Vet)
 	
 }
 
+void MostrarAtenciones(FILE *Vet)
+{
+	Turnos AuxT;
+	DatosVet AuxV;
+	FILE *Tur;
+	int band;
+	
+	Vet=fopen("Veterinario.dat","rb");
+	if(Vet==NULL)
+	{
+		printf("Error: No hay veterinarios registrados.");
+	}
+	else
+	{
+		fread(&AuxV,sizeof(DatosVet),1,Vet);
+		while(!feof(Vet))
+		{
+			Tur = fopen("Turnos.dat","rb");
+			if(Tur==NULL)
+			{
+				printf("Error: No hay turnos");
+		    }
+		    else
+			{
+			    fread(&AuxT,sizeof(Turnos),1,Tur);
+			    band=0;
+			    while(!feof(Tur))
+			    {			    	
+			    	if(AuxV.Mat == AuxT.MatV && AuxT.borrado == true)
+			    	{
+			    		if(band==0)
+			    		{
+			    			printf("Mascotas atendidas por %s:\n\nDatos de la mascota: \n",AuxV.ApeyNom);
+			    		    band=1;
+			    		}
+			    		printf("--------------------------------------------\n");
+			    		printf("\tNombre: %s\n",AuxT.NomMas);
+			    		printf("\tDNI del dueño: %d\n",AuxT.DNIT);
+			    		printf("\tFecha del turno: %d/%d/%d\n",AuxT.FecT.dia,AuxT.FecT.mes,AuxT.FecT.anio);
+			    		printf("\tEvolucion de la mascota: %s\n",AuxT.evoMasc);
+			    		printf("--------------------------------------------\n");
+			    		
+			    	}
+			    	fread(&AuxT,sizeof(Turnos),1,Tur);
+			    }
+			    fclose(Tur);
+			}
+			fread(&AuxV,sizeof(DatosVet),1,Vet);
+		}
+		fclose(Vet);
+	}
+}
 
 
+void Ranking(FILE *Vet)
+{
+	NomV Vets[100];
+	Turnos AuxT;
+	DatosVet AuxV;
+	FILE *Tur;
+	int vec[100],i=0,c,aux;
+	char auxC[60];
+	
+	Vet=fopen("Veterinario.dat","rb");
+	if(Vet==NULL)
+	{
+		printf("Error: No hay veterinarios registrados.");
+	}
+	else
+	{
+		fread(&AuxV,sizeof(DatosVet),1,Vet);
+		while(!feof(Vet))
+		{
+			Tur = fopen("Turnos.dat","rb");
+			if(Tur==NULL)
+			{
+				printf("Error: No hay turnos");
+		    }
+		    else
+			{
+				c=0;
+			    fread(&AuxT,sizeof(Turnos),1,Tur);
+			    while(!feof(Tur))
+			    {	
+				    		    	
+			    	if(AuxV.Mat == AuxT.MatV && AuxT.borrado == true)
+			    	{
+			    		c++;
+			    	}
+			    	
+			    	fread(&AuxT,sizeof(Turnos),1,Tur);
+			    	
+			    }
+			    vec[i]=c;
+			    strcpy(Vets[i],AuxV.ApeyNom);
+			    i++;
+			    fclose(Tur);
+			}
+			fread(&AuxV,sizeof(DatosVet),1,Vet);
+		}
+		fclose(Vet);
+	}
+	
+	for(int j=0;j<i;j++)
+	{
+		for(int k=j;k<i;k++)
+		{
+			if(vec[j]<vec[k])
+			{
+				aux = vec[j];
+				vec[j] = vec[k];
+				vec[k] = aux;
+				strcpy(auxC,Vets[j]);
+				strcpy(Vets[j],Vets[k]);
+				strcpy(Vets[k],auxC);
+			
+			}
+		
+		}	
+	}
+	
+	printf("Ranking de atenciones: \n\n");
+	for(int j=0;j<i;j++)
+	{
+		printf("%d-%s: %d\n",j+1,Vets[j],vec[j]);	
+	}
+	
+}
 
 
 

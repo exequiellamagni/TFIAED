@@ -192,7 +192,7 @@ void listaEspera(FILE *Us)
 							fread(&mascAux,sizeof(Mascotas),1,aux);
 							while(!feof(aux))
 							{
-								if(mascAux.DNID == turnAux.DNIT && turnAux.borrado == false)
+								if(mascAux.DNID == turnAux.DNIT && turnAux.borrado == false && strcmp(mascAux.Nombre,turnAux.NomMas)==0)
 								{
 									printf("DATOS DEL TURNO:\n");
 									printf("--------------------------------------------------\n");
@@ -271,7 +271,7 @@ void evolucionMascota(FILE *Us)
 					fread(&auxT,sizeof(Turnos),1,aux);
 					while(!feof(aux))
 					{
-						if(auxM.DNID==auxT.DNIT)
+						if(auxM.DNID==auxT.DNIT && strcmp(auxM.Nombre,auxT.NomMas)==0)
 						{
 							printf("Ingrese la evolucion de la mascota: \n");
 							_flushall();
