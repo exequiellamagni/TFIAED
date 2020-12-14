@@ -367,7 +367,7 @@ void RegistrarUs(FILE *Vet)
 			    ComprobarUsuario(DatU.Usuar,b,Vet);
 		    }
 		  
-	       //registro de contraseñia del asistente.
+	       //registro de contraseña del asistente.
 	  
 	  	    printf("\nRegistrar contraseña:\n");
 		    printf("1- Debe contener como minimo: una letra mayuscula,una minuscula y un numero\n");
@@ -454,6 +454,8 @@ void Ranking(FILE *Vet)
 	FILE *Tur;
 	int vec[100],i=0,c,aux;
 	char auxC[60];
+	int auxa,auxm;
+	int band=0;
 	
 	Vet=fopen("Veterinario.dat","rb");
 	if(Vet==NULL)
@@ -462,6 +464,10 @@ void Ranking(FILE *Vet)
 	}
 	else
 	{
+		printf("Ingrese el año(AAAA) del cual desea conocer el ranking: ");
+		scanf("%d",&auxa);
+		printf("\nIngrese el mes(MM) del cual desea conocer el ranking: ");
+		scanf("%d",&auxm);
 		fread(&AuxV,sizeof(DatosVet),1,Vet);
 		while(!feof(Vet))
 		{
@@ -479,7 +485,13 @@ void Ranking(FILE *Vet)
 				    		    	
 			    	if(AuxV.Mat == AuxT.MatV && AuxT.borrado == true)
 			    	{
-			    		c++;
+			    		if(AuxT.FecT.mes == auxm && AuxT.FecT.anio == auxa)
+			    		{
+			    			c++;
+			    			band=1;
+			    		}
+			    	
+			    		
 			    	}
 			    	
 			    	fread(&AuxT,sizeof(Turnos),1,Tur);
@@ -513,11 +525,19 @@ void Ranking(FILE *Vet)
 		}	
 	}
 	
-	printf("Ranking de atenciones: \n\n");
-	for(int j=0;j<i;j++)
+	if(band==0)
 	{
-		printf("%d-%s: %d\n",j+1,Vets[j],vec[j]);	
+		printf("\n\nNo hubo atenciones ese mes.");
 	}
+	else
+	{
+		printf("\nRanking de atenciones: \n\n");
+	    for(int j=0;j<i;j++)
+		{
+			printf("%d-%s: %d\n",j+1,Vets[j],vec[j]);	
+		}	
+	}
+
 	
 }
 
