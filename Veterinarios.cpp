@@ -12,7 +12,7 @@ main()
 {
 	setlocale(LC_ALL,"spanish");
 	FILE *Us;
-	int menu=0, Is;
+	int menu=0, Is=1;
 	int b=1;
 	
 	while(menu!=4)
@@ -56,11 +56,9 @@ main()
 						printf("Para acceder, inicie sesion.\n");
 					}
 			break;
-			
-			
-			
-			
-			       
+			case 4:break;
+			default: printf("Error: número no valido");
+     
 		}
 		if(menu!=4)
 		{
@@ -77,11 +75,11 @@ void listaEspera(FILE *Us)
 {
 	Fecha fecAux;
 	int band=1;  //bandera
-	Turnos turnAux;	
+	Turnos turnAux,AuxT;	
 	DatosVet matriAux;	
-	int matri;
+	int matri,k=1;
 	Mascotas mascAux;	
-	FILE *aux;
+	FILE *aux,*Us2;
 			
 	while(band==1)
 	{
@@ -200,22 +198,38 @@ void listaEspera(FILE *Us)
 									puts(turnAux.NomMas);
 									if((mascAux.fecNac.anio - fecAux.anio)>0)
 									{
-										printf("Edad: %d años\n",mascAux.fecNac.anio - fecAux.anio);
+										printf("Edad: %d años\n",fecAux.anio - mascAux.fecNac.anio);
 									}
 									else if((mascAux.fecNac.mes - fecAux.mes) > 0)
 									{
-										printf("Edad: %d meses\n",mascAux.fecNac.mes - fecAux.mes);
+										printf("Edad: %d meses\n",fecAux.mes - mascAux.fecNac.mes);
 									}
 									else
 									{
-										printf("Edad: %d dias\n",mascAux.fecNac.dia - fecAux.dia);
+										printf("Edad: %d dias\n",fecAux.dia - mascAux.fecNac.dia);
 									}									
 									printf("Peso: %2.f\n",mascAux.Peso);
 									printf("Localidad: %s\n",mascAux.Loc);
 									printf("DNI del dueño: %d\n",mascAux.DNID);
 									printf("\n\nEVOLUCION REGISTRADA DE LA MASCOTA:\n");
-									puts(turnAux.evoMasc);
-									printf("--------------------------------------------------\n");
+									
+									Us2 = fopen("Turnos.dat","rb");
+									fread(&AuxT,sizeof(Turnos),1,Us2);
+									while(!feof(Us2))
+									{
+										if(strcmp(AuxT.NomMas,turnAux.NomMas)==0 && AuxT.borrado==true)
+										{
+											printf("%s - ",AuxT.evoMasc);
+											k=0;
+										}
+										fread(&AuxT,sizeof(Turnos),1,Us2);	
+									}
+									fclose(Us2);
+									if(k==1)
+									{
+										printf("No hay evalucion registrado\n");
+									}
+									printf("\n--------------------------------------------------\n");
 								}
 								else
 								{
@@ -234,83 +248,57 @@ void listaEspera(FILE *Us)
 	}
 }
 
+
 void evolucionMascota(FILE *Us)
 {
 	char auxNom[60];
-	Mascotas auxM;
-	FILE *aux;
-	Turnos auxT;
-	int band=0;
+	Turnos AuxT;
+	int band=0,i=0;
 	
-	Us = fopen("Mascotas.dat","rb");
-	
+	Us = fopen("Turnos.dat","r+b");
 	if(Us==NULL)
 	{
-		printf("Error: No se ha registrado ninguna  mascota. (El archivo está vacío)\n");
+		printf("Error: Todavia no se registron turnos");
 	}
 	else
 	{
-		printf("Ingrese el nombre de la mascota a registrar: ");
+		printf("Ingrese: \n\n");
+		printf("Nombre de la mascota: ");
 		_flushall();
 		gets(auxNom);
 		strupr(auxNom);
-		
-		fread(&auxM,sizeof(Mascotas),1,Us);
-		while(!feof(Us))
+		fread(&AuxT,sizeof(Turnos),1,Us);
+		while(feof(Us)==0 && band==0)
 		{
-			strupr(auxM.Nombre);
-			if(strcmp(auxNom,auxM.Nombre)==0)
+			if(strcmp(auxNom,AuxT.NomMas)==0 && AuxT.borrado == false)
 			{
-				aux = fopen("Turnos.dat","r+b");
-				if(aux==NULL)
-				{
-					printf("Error: No hay turnos registrados.\n");
-				}
-				else
-				{
-					fread(&auxT,sizeof(Turnos),1,aux);
-					while(!feof(aux))
-					{
-						if(auxM.DNID==auxT.DNIT && strcmp(auxM.Nombre,auxT.NomMas)==0)
-						{
-							printf("Ingrese la evolucion de la mascota: \n");
-							_flushall();
-							gets(auxT.evoMasc);
-							
-							auxT.borrado=true;
-							fseek(aux,-sizeof(Turnos),1);
-							fwrite(&auxT,sizeof(Turnos),1,aux);
-							fseek(aux,0,2);
-							fseek(Us,0,2);
-							
-							printf("Evolucion registrada, paciente atendido.\n");
-							band=2;
-						}
-						else
-						{
-							band=1;
-						}
-						
-						fread(&auxT,sizeof(Turnos),1,aux);	
-					}
-					fclose(aux);
-				}
-				
+				printf("\nEvolucion de la mascota: ");
+				_flushall();
+		        gets(AuxT.evoMasc);
+		        AuxT.borrado=true;
+		        fseek(Us,i*sizeof(Turnos),0);
+		        fwrite(&AuxT,sizeof(Turnos),1,Us);
+		        band=1;
+		        
 			}
-			fread(&auxM,sizeof(Mascotas),1,Us);
-		}
-		if(band==0)
-		{
-			printf("Error: La mascota no se encuentra registrada.\n");
-		}
-		else if(band==1)
-		{
-			printf("Error: No tiene un turno registrado, por favor registrese.\n");
+			else
+			{
+				
+				fread(&AuxT,sizeof(Turnos),1,Us);	
+			}
+			i++;
 		}
 		fclose(Us);
 	}
 	
-	
+	if(band!=1)
+	{
+		printf("\n\nError: Esta mascota no tiene turno\n\n");
+	}
+	else
+	{
+		printf("\n\nEvolucion guardada con exito\n\n");
+	}
 }
 
 

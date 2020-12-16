@@ -5,12 +5,13 @@
 main()
 {
 	int menu;
+	
 	while(menu!=4)
 	{
 		printf("-------------------------------------------------\n");
 		printf("Se encuentra en el menu principal: \n\n");
 		printf("1-Ingresar al modulo de Administracion\n");
-		printf("2-Ingrear al modulo de asistente\n");
+		printf("2-Ingresar al modulo de asistente\n");
 		printf("3-Ingresar al modulo de veterinarios\n");
 		printf("4-Cerrar programa\n");
 		printf("-------------------------------------------------");

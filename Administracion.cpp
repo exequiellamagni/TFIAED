@@ -17,48 +17,102 @@ void Ranking(FILE *Vet);
 
 main()
 {
-	int menu=0;
+	int menu=0,l=100;
 	setlocale(LC_ALL,"spanish");
-	FILE *Vet;
+	FILE *Vet,*clave;
+	int pin,cont,acc=0,k;
 	
-	
-	
-	while(menu!=5)
+	clave = fopen("claves.dat","rb");
+	if(clave==NULL)
 	{
-		printf("-----------------------------------------------------");
-		printf("\nSe encuentra en el menú de administración, ingrese:");
-		printf("\n\n1-Registrar un nuevo veterinario");
-		printf("\n2-Registrar un nuevo asistente");
-		printf("\n3-Atenciones por veterinarios");
-		printf("\n4-Listado de atenciones por veterinario y fecha");
-		printf("\n5-Cerrar Menú");
-		printf("\n---------------------------------------------------");
-		printf("\n\nIngrese la opcion: ");
-		scanf("%d",&menu);
-		system("CLS");
+		fclose(clave);
+		clave = fopen("claves.dat","wb");
+
+         while(pin > 5);
+         {
+         	printf("Crear pin(Maximo 5 digitos):\n\tIngrese el nuevo pin: ");
+			scanf("%d",&pin);
+         }
+
+		fwrite(&pin,sizeof(int),1,clave);
+		fclose(clave);
+		acc=1;
+	}
+	else
+	{
+		clave = fopen("claves.dat","rb");
+		fread(&pin,sizeof(int),1,clave);
+		do
+		{
+			printf("Ingrese el pin de acceso: ");
+			scanf("%d",&cont);
+			if(cont == pin)
+			{
+				acc = 1;
+			}
+			else
+			{
+				printf("\nContraseña incorrecta: \n");
+				printf("1.Volver a intentar\n2.Volver al Menú\n\nOpcion: ");
+				scanf("%d",&k);
+				if(k==1)
+				{
+					acc=0;
+					system("cls");
+				}
+				else
+				{
+					acc=2;
+				}
+
+			}
+			
+			
+		}while(acc==0);
 		
-		switch(menu)
+
+	}
+    system("CLS");
+	if(acc==1)
+	{
+		while(menu!=5)
 		{
-			case 1: RegistrarVet(Vet);
-			break;
-			case 2: RegistrarUs(Vet);
-			break;
-			case 3: MostrarAtenciones(Vet);
-			break;
-			case 4: Ranking(Vet);
-			break;
-			case 5: 
-			break;
-			default: printf("Error: opcion invalida");
+			printf("-----------------------------------------------------");
+			printf("\nSe encuentra en el menú de administración, ingrese:");
+			printf("\n\n1-Registrar un nuevo veterinario");
+			printf("\n2-Registrar un nuevo asistente");
+			printf("\n3-Atenciones por veterinarios");
+			printf("\n4-Ranking de atenciones por veterinarios");
+			printf("\n5-Cerrar Menú");
+			printf("\n---------------------------------------------------");
+			printf("\n\nIngrese la opcion: ");
+			scanf("%d",&menu);
+			system("CLS");
+				
+			switch(menu)
+			{
+				case 1: RegistrarVet(Vet);
+				break;
+				case 2: RegistrarUs(Vet);
+				break;
+				case 3: MostrarAtenciones(Vet);
+				break;
+				case 4: Ranking(Vet);
+				break;
+				case 5: 
+				break;
+				default: printf("Error: opcion invalida");
+			}
+			if(menu!=5)
+			{
+				printf("\n\n\n");
+				system("pause");
+			}
+			system("CLS");
 		}
-		if(menu!=5)
-		{
-			printf("\n\n\n");
-			system("pause");
-		}
-		system("CLS");
 	}
 	
+
 	
 	
 }
@@ -114,10 +168,10 @@ void RegistrarVet(FILE *Vet)
 	    	    gets(DatU.Usuar);
 			    ComprobarUsuario(DatU.Usuar,b,Vet);
 		    }
-		  
-	       //registro de contraseñia del veterinario
+		  	system("CLS");
+	       //registro de contraseña del veterinario
 	  
-	  	    printf("\nRegistrar contraseña:\n");
+	  	    printf("Registrar contraseña:\n");
 		    printf("1- Debe contener como minimo: una letra mayuscula,una minuscula y un numero\n");
 		    printf("2- Solo puede contener caracteres alfanumericos\n");
 		    printf("3- Debe tener entre 6-32 caracteres\n");
@@ -366,10 +420,10 @@ void RegistrarUs(FILE *Vet)
 	    	    gets(DatU.Usuar);
 			    ComprobarUsuario(DatU.Usuar,b,Vet);
 		    }
-		  
+		  	system("CLS"); 
 	       //registro de contraseña del asistente.
 	  
-	  	    printf("\nRegistrar contraseña:\n");
+	  	    printf("Registrar contraseña:\n");
 		    printf("1- Debe contener como minimo: una letra mayuscula,una minuscula y un numero\n");
 		    printf("2- Solo puede contener caracteres alfanumericos\n");
 		    printf("3- Debe tener entre 6-32 caracteres\n");
@@ -406,6 +460,9 @@ void MostrarAtenciones(FILE *Vet)
 	}
 	else
 	{
+		printf("===========================\n");
+		printf("== Listado de Atenciones ==\n");
+		printf("===========================");
 		fread(&AuxV,sizeof(DatosVet),1,Vet);
 		while(!feof(Vet))
 		{
@@ -417,6 +474,7 @@ void MostrarAtenciones(FILE *Vet)
 		    else
 			{
 			    fread(&AuxT,sizeof(Turnos),1,Tur);
+			    
 			    band=0;
 			    while(!feof(Tur))
 			    {			    	
@@ -424,7 +482,10 @@ void MostrarAtenciones(FILE *Vet)
 			    	{
 			    		if(band==0)
 			    		{
-			    			printf("Mascotas atendidas por %s:\n\nDatos de la mascota: \n",AuxV.ApeyNom);
+			    			printf("\n\n\n============================================\n");
+			    			printf("Mascotas atendidas por %s:\n",AuxV.ApeyNom);
+			    			printf("============================================\n\n");
+			    			printf("Datos de la mascota: \n");
 			    		    band=1;
 			    		}
 			    		printf("--------------------------------------------\n");
@@ -474,7 +535,7 @@ void Ranking(FILE *Vet)
 			Tur = fopen("Turnos.dat","rb");
 			if(Tur==NULL)
 			{
-				printf("Error: No hay turnos");
+				band=0;
 		    }
 		    else
 			{

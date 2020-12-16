@@ -34,9 +34,9 @@ struct Turnos
 {
 	int MatV,DNIT;
 	Fecha FecT;
-	char evoMasc[380]="Aun no hay datos de la evolucion.";
+	char evoMasc[380];
 	char NomMas[60];
-	bool borrado=false;
+	bool borrado;
 };
 
 
