@@ -12,7 +12,7 @@ main()
 {
 	setlocale(LC_ALL,"spanish");
 	FILE *Us;
-	int menu=0, Is=1;
+	int menu=0, Is;
 	int b=1;
 	
 	while(menu!=4)

@@ -12,7 +12,7 @@ main()
 {
 	setlocale(LC_ALL,"spanish");
 	FILE *Us;
-	int menu=0,b=0,Is=1,Vi=0;
+	int menu=0,b=0,Is,Vi=0;
 	Mascotas Aux;
 	while(menu!=5)
 	{
@@ -175,16 +175,6 @@ void RegistrarMas(FILE *Us)
 	}
 	fclose(Us);
 	
-	Us = fopen("Mascotas.dat","rb");
-	fread(&Aux,sizeof(Mascotas),1,Us);
-	while(!feof(Us))
-	{
-		printf("---%s---",Aux.Nombre);
-		printf("--%d--",Aux.DNID);
-		fread(&Aux,sizeof(Mascotas),1,Us);
-	}
-	
-	
 }
 
 
@@ -277,6 +267,7 @@ void RegistarTur(FILE *Us)
 		else
 		{
 			fwrite(&DatP,sizeof(Turnos),1,Us);
+			printf("Turno registrado con exito.");
 			fclose(Us);
 		}
 	}
